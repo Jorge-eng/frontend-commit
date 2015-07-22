@@ -16,7 +16,6 @@ COMPRESSIBLE = [
     'text/css'
 ]
 CDN_ROOT = '//hellocdn.net/'
-DEPLOY_VERSION_FILE = './static/s3deploy.txt'
 
 def main():
     parser = OptionParser(usage='usage: %prog [options] src_folder destination_bucket_name prefix')
@@ -31,6 +30,7 @@ def main():
     conn = boto.connect_s3()
     bucket = conn.get_bucket(bucket_name)
 
+    DEPLOY_VERSION_FILE = src_folder + '/s3deploy.txt'
     S3_VERSION_FILE = prefix + '.s3deploy.txt'
 
     if bucket.get_key(S3_VERSION_FILE):
