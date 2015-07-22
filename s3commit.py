@@ -16,6 +16,7 @@ COMPRESSIBLE = [
     'text/css'
 ]
 CDN_ROOT = '//hellocdn.net/'
+STATIC_NAME = 'static'
 
 def main():
     parser = OptionParser(usage='usage: %prog [options] src_folder destination_bucket_name prefix')
@@ -68,7 +69,7 @@ def main():
         type = type or 'application/octet-stream'
 
         if 'image' in type:
-            root = '/' + src_folder + '/' + name
+            root = '/' + STATIC_NAME + '/' + name
             key = prefix + str(version) + name
             key = hashlib.md5(key).hexdigest() + '.' + name.split('.')[-1]
 
@@ -84,8 +85,8 @@ def main():
             key = hashlib.md5(prefix + str(version) + name).hexdigest() + '.' + name.split('.')[-1]
             old_key = hashlib.md5(prefix + str((int(version) - 1)) + name).hexdigest() + '.' + name.split('.')[-1]
 
-            keys['old'].append(key)
-            keys['new'].append(old_key)
+            keys['old'].append(old_key)
+            keys['new'].append(key)
 
             content = open(os.path.join(src_folder, name))
             key = bucket.new_key(key)
