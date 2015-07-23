@@ -146,7 +146,7 @@ def main():
             content.close()
 
     # Delete old versions
-    bucket.delete_keys(keys['old'])
+    #bucket.delete_keys(keys['old'])
 
 if __name__ == '__main__':
     main()
