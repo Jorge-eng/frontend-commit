@@ -89,7 +89,6 @@ def main():
             keys['new'].append(key)
 
             content = open(os.path.join(src_folder, name))
-            key = bucket.new_key(key)
 
             expires = datetime.utcnow() + timedelta(days=(25 * 365))
             expires = expires.strftime("%a, %d %b %Y %H:%M:%S GMT")
@@ -107,10 +106,9 @@ def main():
             # Also upload retina version
             if 'image' in type and '@' in name and 'x.' in name:
                 retina = name.split('@')[1].split('x')[0]
-                key_retina = hashlib.md5(prefix + str(version) + name).hexdigest() + '@' + retina + 'x.' + name.split('.')[-1]
-                key_retina = bucket.new_key(key_retina)
-                key_retina.set_contents_from_file(content, headers)
-                content.seek(0)
+                key = hashlib.md5(prefix + str(version) + name).hexdigest() + '@' + retina + 'x.' + name.split('.')[-1]
+
+            key = bucket.new_key(key)
 
             if type == 'application/javascript':
                 outs = StringIO()
