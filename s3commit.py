@@ -70,8 +70,13 @@ def main():
 
         if 'image' in type:
             root = '/' + STATIC_NAME + '/' + name
-            key = prefix + str(version) + name
-            key = hashlib.md5(key).hexdigest() + '.' + name.split('.')[-1]
+
+            if '@' in name and 'x.' in name:
+                retina = name.split('@')[1].split('x')[0]
+                clean_name = name.replace('@' + retina + 'x', '')
+                key = hashlib.md5(prefix + str(version) + clean_name).hexdigest() + '@' + retina + 'x.' + name.split('.')[-1]
+            else:
+                key = hashlib.md5(prefix + str(version) + name).hexdigest() + '.' + name.split('.')[-1]
 
             replace[root] = key
 
@@ -82,13 +87,20 @@ def main():
 
     for name in namelist:
         if '.DS_Store' not in name and '.scss' not in name:
-            key = hashlib.md5(prefix + str(version) + name).hexdigest() + '.' + name.split('.')[-1]
+            if 'image' in type and '@' in name and 'x.' in name:
+                retina = name.split('@')[1].split('x')[0]
+                clean_name = name.replace('@' + retina + 'x', '')
+                key = hashlib.md5(prefix + str(version) + clean_name).hexdigest() + '@' + retina + 'x.' + name.split('.')[-1]
+            else:
+                key = hashlib.md5(prefix + str(version) + name).hexdigest() + '.' + name.split('.')[-1]
+
             old_key = hashlib.md5(prefix + str((int(version) - 1)) + name).hexdigest() + '.' + name.split('.')[-1]
 
             keys['old'].append(old_key)
             keys['new'].append(key)
 
             content = open(os.path.join(src_folder, name))
+            key = bucket.new_key(key)
 
             expires = datetime.utcnow() + timedelta(days=(25 * 365))
             expires = expires.strftime("%a, %d %b %Y %H:%M:%S GMT")
@@ -102,14 +114,6 @@ def main():
                 'Cache-Control': 'public'
             }
             states = [type]
-
-            # Also upload retina version
-            if 'image' in type and '@' in name and 'x.' in name:
-                retina = name.split('@')[1].split('x')[0]
-                clean_name = name.replace('@' + retina + 'x', '')
-                key = hashlib.md5(prefix + str(version) + clean_name).hexdigest() + '@' + retina + 'x.' + clean_name.split('.')[-1]
-
-            key = bucket.new_key(key)
 
             if type == 'application/javascript':
                 outs = StringIO()
