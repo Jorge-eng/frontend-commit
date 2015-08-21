@@ -106,6 +106,7 @@ def main():
             # Also upload retina version
             if 'image' in type and '@' in name and 'x.' in name:
                 retina = name.split('@')[1].split('x')[0]
+                name = name.replace('@' + retina + 'x', '')
                 key = hashlib.md5(prefix + str(version) + name).hexdigest() + '@' + retina + 'x.' + name.split('.')[-1]
 
             key = bucket.new_key(key)
