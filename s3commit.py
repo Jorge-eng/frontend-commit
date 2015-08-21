@@ -110,6 +110,7 @@ def main():
                 key_retina = hashlib.md5(prefix + str(version) + name).hexdigest() + '@' + retina + 'x.' + name.split('.')[-1]
                 key_retina = bucket.new_key(key_retina)
                 key_retina.set_contents_from_file(content, headers)
+                content.seek(0)
 
             if type == 'application/javascript':
                 outs = StringIO()
