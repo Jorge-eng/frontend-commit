@@ -111,7 +111,8 @@ def main():
                 'Content-Type': type,
                 'Expires': expires,
                 'x-amz-acl': 'public-read',
-                'Cache-Control': 'public'
+                'Cache-Control': 'public',
+                'Access-Control-Allow-Origin': '*'
             }
             states = [type]
 
