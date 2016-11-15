@@ -1,11 +1,17 @@
 #! /usr/bin/env python
-import os, sys, boto, mimetypes, zipfile, gzip
+import os
+import sys
+import boto
+import mimetypes
+import zipfile
+import gzip
+import hashlib
+
 from io import StringIO, BytesIO
 from optparse import OptionParser
 from jsmin import *
 from cssmin import *
 from datetime import datetime, timedelta
-import hashlib
 
 # The list of content types to gzip, add more if needed
 COMPRESSIBLE = [
@@ -111,8 +117,7 @@ def main():
                 'Content-Type': type,
                 'Expires': expires,
                 'x-amz-acl': 'public-read',
-                'Cache-Control': 'public',
-                'Access-Control-Allow-Origin': '*'
+                'Cache-Control': 'public, max-age=365000000, immutable'
             }
             states = [type]
 
